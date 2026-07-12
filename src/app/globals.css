@@ -1,0 +1,175 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ============================================================
+   AgentForge — Minimalist Off-White & Dark Brown Theme
+   ============================================================
+   Design philosophy:
+   - Warm off-white backgrounds (#FAF8F5 / #F5F1EB)
+   - Dark espresso brown primary (#3D2B1F)
+   - Muted, desaturated accent tones (warm taupe, clay)
+   - Minimal color — let typography and spacing carry the design
+   - Status colors are the only saturated hues (kept subtle)
+   ============================================================ */
+
+:root {
+  --radius: 0.5rem;
+
+  /* Backgrounds — warm off-white */
+  --background: oklch(0.98 0.008 60);          /* #FAF8F5 warm off-white */
+  --foreground: oklch(0.28 0.02 50);           /* #2A2018 near-black brown */
+
+  /* Cards — pure off-white, slightly lighter than bg */
+  --card: oklch(0.995 0.005 60);               /* #FDFBF8 */
+  --card-foreground: oklch(0.28 0.02 50);
+
+  /* Popovers — same as card */
+  --popover: oklch(0.995 0.005 60);
+  --popover-foreground: oklch(0.28 0.02 50);
+
+  /* Primary — dark espresso brown */
+  --primary: oklch(0.32 0.03 45);              /* #3D2B1F dark brown */
+  --primary-foreground: oklch(0.98 0.008 60);  /* off-white on brown */
+
+  /* Secondary — light warm taupe */
+  --secondary: oklch(0.95 0.01 55);            /* #F0EBE3 */
+  --secondary-foreground: oklch(0.32 0.03 45);
+
+  /* Muted — for subtle backgrounds */
+  --muted: oklch(0.95 0.01 55);                /* #F0EBE3 */
+  --muted-foreground: oklch(0.5 0.015 50);     /* #8A7E72 warm gray-brown */
+
+  /* Accent — slightly deeper taupe for hover states */
+  --accent: oklch(0.92 0.012 50);              /* #E8E0D5 */
+  --accent-foreground: oklch(0.32 0.03 45);
+
+  /* Destructive — muted terracotta (not bright red) */
+  --destructive: oklch(0.52 0.08 30);          /* #A0533A muted brick */
+
+  /* Borders — very subtle warm gray */
+  --border: oklch(0.9 0.008 55);               /* #E5DFD5 */
+  --input: oklch(0.9 0.008 55);
+  --ring: oklch(0.45 0.02 45);                 /* medium brown for focus */
+
+  /* Charts — warm earthy palette (browns, clays, taupes) */
+  --chart-1: oklch(0.4 0.04 45);               /* dark brown */
+  --chart-2: oklch(0.55 0.05 35);              /* clay/terracotta */
+  --chart-3: oklch(0.65 0.04 60);              /* warm taupe */
+  --chart-4: oklch(0.75 0.03 70);              /* sand */
+  --chart-5: oklch(0.45 0.03 30);              /* coffee */
+
+  /* Sidebar */
+  --sidebar: oklch(0.96 0.01 55);              /* slightly warmer off-white */
+  --sidebar-foreground: oklch(0.28 0.02 50);
+  --sidebar-primary: oklch(0.32 0.03 45);      /* brown */
+  --sidebar-primary-foreground: oklch(0.98 0.008 60);
+  --sidebar-accent: oklch(0.92 0.012 50);
+  --sidebar-accent-foreground: oklch(0.32 0.03 45);
+  --sidebar-border: oklch(0.9 0.008 55);
+  --sidebar-ring: oklch(0.45 0.02 45);
+}
+
+.dark {
+  /* Dark mode — deep coffee brown backgrounds */
+  --background: oklch(0.2 0.015 45);           /* #1F1812 deep coffee */
+  --foreground: oklch(0.92 0.008 60);          /* warm off-white */
+  --card: oklch(0.24 0.015 45);                /* #261D16 */
+  --card-foreground: oklch(0.92 0.008 60);
+  --popover: oklch(0.24 0.015 45);
+  --popover-foreground: oklch(0.92 0.008 60);
+  --primary: oklch(0.75 0.02 55);              /* light taupe on dark */
+  --primary-foreground: oklch(0.2 0.015 45);
+  --secondary: oklch(0.3 0.015 45);            /* #33291F */
+  --secondary-foreground: oklch(0.92 0.008 60);
+  --muted: oklch(0.3 0.015 45);
+  --muted-foreground: oklch(0.65 0.01 55);     /* warm gray */
+  --accent: oklch(0.34 0.015 45);
+  --accent-foreground: oklch(0.92 0.008 60);
+  --destructive: oklch(0.6 0.1 30);
+  --border: oklch(0.35 0.012 45 / 50%);
+  --input: oklch(0.35 0.012 45 / 50%);
+  --ring: oklch(0.6 0.02 50);
+  --chart-1: oklch(0.65 0.04 60);
+  --chart-2: oklch(0.55 0.05 35);
+  --chart-3: oklch(0.45 0.04 45);
+  --chart-4: oklch(0.5 0.03 70);
+  --chart-5: oklch(0.6 0.03 30);
+  --sidebar: oklch(0.22 0.015 45);
+  --sidebar-foreground: oklch(0.92 0.008 60);
+  --sidebar-primary: oklch(0.65 0.04 60);
+  --sidebar-primary-foreground: oklch(0.2 0.015 45);
+  --sidebar-accent: oklch(0.3 0.015 45);
+  --sidebar-accent-foreground: oklch(0.92 0.008 60);
+  --sidebar-border: oklch(0.35 0.012 45 / 50%);
+  --sidebar-ring: oklch(0.6 0.02 50);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Subtle texture for warmth — barely perceptible */
+    background-image: radial-gradient(circle at 1px 1px, oklch(0.85 0.01 55 / 30%) 1px, transparent 0);
+    background-size: 32px 32px;
+  }
+  /* Minimalist scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.8 0.01 55);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.7 0.015 50);
+  }
+}

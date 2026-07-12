@@ -1,0 +1,161 @@
+// AgentForge - Unified AI-Native API Layer
+// Production schema for tool catalog, integrations, executions, API keys, rate limits, audit
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  apiKeys     ApiKey[]
+  integrations Integration[]
+  executions  Execution[]
+  auditLogs   AuditLog[]
+  playgroundSessions PlaygroundSession[]
+  schedules   Schedule[]
+}
+
+// Pre-built tool definitions (catalog). Managed by platform, not user-editable.
+model Tool {
+  id            String   @id @default(cuid())
+  slug          String   @unique // e.g. "slack_send_message"
+  name          String
+  description   String
+  category      String   // communication | database | crm | devops | productivity | ai | web
+  provider      String   // slack | postgres | salesforce | github | smtp | http | llm | webhook
+  authScheme    String   // none | api_key | oauth2 | bearer | basic | connection_string
+  iconKey       String   @default("wrench")
+  inputSchema   String   // JSON schema string for tool parameters
+  outputSchema  String?  // JSON schema string for tool output
+  enabled       Boolean  @default(true)
+  isBeta        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  executions Execution[]
+}
+
+// A connected app instance: stores credentials (encrypted) for a provider
+model Integration {
+  id            String   @id @default(cuid())
+  name          String
+  provider      String   // slack | postgres | salesforce | github | smtp | http | llm | webhook
+  authScheme    String   // api_key | oauth2 | bearer | basic | connection_string | none
+  // Encrypted JSON blob of credentials. Never returned in plaintext after save.
+  credentials   String
+  // Metadata: scopes, account info, status, last validated
+  meta          String   @default("{}")
+  status        String   @default("active") // active | error | revoked
+  lastValidatedAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  executions  Execution[]
+}
+
+// Hashed API keys for programmatic access to the platform
+model ApiKey {
+  id          String   @id @default(cuid())
+  name        String
+  // SHA-256 hash of the secret. Plaintext only shown once on creation.
+  keyHash     String   @unique
+  // Last 4 chars of the secret for display, e.g. "...ab12"
+  keyPrefix   String
+  scopes      String   @default("tools:execute,tools:read,integrations:read") // CSV
+  rateLimitPerMin Int  @default(120)
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  executions Execution[]
+}
+
+model Execution {
+  id           String   @id @default(cuid())
+  toolId       String
+  integrationId String?
+  apiKeyId     String?
+  userId       String?
+  status       String   // success | error | rate_limited | auth_failed | timeout
+  input        String   // JSON string of input args
+  output       String?  // JSON string of output
+  errorMessage String?
+  durationMs   Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  tool        Tool        @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  integration Integration? @relation(fields: [integrationId], references: [id], onDelete: SetNull)
+  apiKey      ApiKey?     @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([toolId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String   // api_key.create | integration.create | integration.delete | tool.execute | ...
+  actorType  String   @default("user") // user | system | api_key
+  actorId    String?
+  targetType String?
+  targetId   String?
+  metadata   String   @default("{}")
+  ipAddress  String?
+  userId     String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([action])
+}
+
+model PlaygroundSession {
+  id        String   @id @default(cuid())
+  title     String   @default("New session")
+  messages  String   @default("[]") // JSON array of {role, content, toolCalls?}
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Schedule {
+  id        String   @id @default(cuid())
+  name      String
+  toolSlug  String
+  input     String   // JSON string of tool input
+  cronExpr  String   // e.g. "every_5m", "every_1h", "daily_09:00"
+  enabled   Boolean  @default(true)
+  lastRunAt DateTime?
+  nextRunAt DateTime?
+  runCount  Int      @default(0)
+  lastStatus String? // success | error | ...
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([nextRunAt])
+}

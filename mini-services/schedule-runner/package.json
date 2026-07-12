@@ -1,0 +1,8 @@
+{
+  "name": "schedule-runner",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot index.ts"
+  },
+  "dependencies": {}
+}
