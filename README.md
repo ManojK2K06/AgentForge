@@ -586,14 +586,4 @@ MIT
 
 ---
 
-## Profitability Outlook
-
-AgentForge operates in the **AI Agents market** ($7.84B in 2025 → $52.62B by 2030, 46.3% CAGR). Direct competitor **Composio** raised $29M Series A in April 2025. Comparable platform **Zapier** generates $310M ARR.
-
-**Revenue model**: Usage-based pricing (free tier: 1k calls/mo, $29/mo: 50k calls, $99/mo: 250k calls, $299/mo: 1M calls) + premium connectors + managed OAuth + enterprise SLAs.
-
-**Path to $1M ARR**: ~800 paying customers at $100/month in ~18 months. AI infrastructure companies trade at 21-30x revenue multiples.
-
----
-
 *Built with Next.js 16, TypeScript, Tailwind CSS, Prisma, and Socket.IO.*
